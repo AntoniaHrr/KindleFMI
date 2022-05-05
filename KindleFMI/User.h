@@ -1,6 +1,8 @@
 #pragma once
 #include "Book.h"
 #include <fstream>
+#include <cstring>
+#pragma warning(disable: 4996)
 
 //fourth
 
@@ -44,19 +46,10 @@ public:
 	}
 	void copyFrom(const User& other) {
 
-		int len = strlen(other.username);
-		this->username = new char[len + 1];
-		for (int i = 0; i < len + 1; i++) {
-			this->username[i] = other.username[i];
-		}
-		this->username = other.username;
 
-		int lenght = strlen(other.password);
-		this->password = new char[lenght + 1];
-		for (int i = 0; i < lenght + 1; i++) {
-			this->password[i] = other.password[i];
-		}
-		this->password = other.password;
+		strcpy(this->username, other.username);
+
+		strcpy(this->password, other.password);
 
 		for (int i = 0; i < w; i++) {
 			written[i] = other.written[i];
@@ -197,10 +190,10 @@ public:
 	}
 	//getters
 	const char* getName() {
-		return username;
+		return this->username;
 	}
 	const char* getPassword() {
-		return password;
+		return this->password;
 	}
 
 	bool Equal(const char* task, const char* TaskOne)

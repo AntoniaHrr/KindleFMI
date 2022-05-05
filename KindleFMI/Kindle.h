@@ -16,7 +16,7 @@ private:
 	User* logged;
 public:
 	Kindle() {
-		this->users = nullptr;
+		this->users = NULL;
 		this->u = 0;
 		this->b = 0;
 		this->logged = nullptr;
@@ -52,8 +52,11 @@ public:
 		this->u = other.u;
 	}
 
-
-
+	//////////////////////////////////////////////
+	void UpdateBook(Book book, const char* content) {
+		book.addPage(content);
+	}
+	/////////////////////////////////////////////
 	void AddRate(const char* title, int rate) {
 		for (int i = 0; i < b; i++) {
 			if (strcmp(title, books[i].getHeadline()) == 0)
@@ -139,22 +142,22 @@ public:
 			}
 		}
 		u++;
-		/*if (u == 1) {
-			users = new User[u];
-			users[u - 1].setPassword(password);
-			users[u - 1].setUsername(name);
-		}
-		else {*/
 			User* place_holder = new User[u];
 			for (int i = 0; i < u - 1; i++)
 			{
 				place_holder[i] = users[i];
+			delete[] this->users;
 			}
-			delete[] users;
 			place_holder[u - 1].setUsername(name);
 			place_holder[u - 1].setPassword(password);
-			this->users = place_holder;
-			//delete[] place_holder;
+			
+			for (int i = 0; i < u; i++)
+			{
+			this->users[i] = place_holder[i];
+			}
+			
+			
+			delete[] place_holder;
 	
 		
 	}
