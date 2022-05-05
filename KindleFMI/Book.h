@@ -32,9 +32,6 @@ public:
 		this->r_count = 0;
 	}
 
-
-
-
 	void Save() {
 		int x = strlen(headline);
 		int y = strlen(author);
@@ -48,7 +45,8 @@ public:
 		myfile.write((const char*)&y, sizeof(int));
 		myfile.write((const char*)author, strlen(author));
 		myfile.write((const char*)&rating, sizeof(rating));
-		myfile.write((const char*)&r, sizeof(r));
+		myfile.write((const char*)&r_count, sizeof(int));
+		myfile.write((const char*)&r, sizeof(Rate)*r_count);
 		myfile.write((const char*)&pages_count, sizeof(int));
 		myfile.write((const char*)pages, sizeof(Page) * pages_count);
 		myfile.write((const char*)&comments_count, sizeof(int));
@@ -108,10 +106,11 @@ public:
 			place_holder[i] = r[i];
 		}
 		delete[] r;
+
 		place_holder[r_count - 1] = Rate(rate, username);
 		r = place_holder;
 		delete[] place_holder;
-
+		//new function
 		rating = 0;
 		for (int i = 0; i < r_count; i++) {
 			rating = rating + r[i].getTheRate();

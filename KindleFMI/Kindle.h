@@ -15,6 +15,13 @@ private:
 	int b=0;
 	User* logged;
 public:
+	Kindle() {
+		this->users = nullptr;
+		this->u = 0;
+		this->b = 0;
+		this->logged = nullptr;
+		this->books = nullptr;
+	}
 
 	Kindle& operator=(const Kindle& other) {
 		if (this != &other)
@@ -123,21 +130,33 @@ public:
 	}
 
 	void Register(const char* name,const char* password) {
-		for (int i = 0; i < u; i++)
+		for (int i = 0; i < u ; i++)
 		{
 			if (strcmp(users[i].getName(), name) == 0)
+			{
+				cout << "Username is taken!";
 				return;
+			}
 		}
 		u++;
-		User* place_holder = new User[u];
-		for (int i = 0; i < u - 1; i++)
-		{
-			place_holder[i] = users[i];
+		/*if (u == 1) {
+			users = new User[u];
+			users[u - 1].setPassword(password);
+			users[u - 1].setUsername(name);
 		}
-		delete[] users;
-		place_holder[u - 1].setUsername(name);
-		place_holder[u - 1].setPassword(password);
-		this->users = place_holder;
+		else {*/
+			User* place_holder = new User[u];
+			for (int i = 0; i < u - 1; i++)
+			{
+				place_holder[i] = users[i];
+			}
+			delete[] users;
+			place_holder[u - 1].setUsername(name);
+			place_holder[u - 1].setPassword(password);
+			this->users = place_holder;
+			//delete[] place_holder;
+	
+		
 	}
 
 	bool Login(const char* name,const char* password) {
@@ -164,6 +183,10 @@ public:
 		SaveUsersandBooks();
 		delete[] logged;
 		logged = nullptr;
+	}
+
+	const char* getUsername(){
+		return users[1].getName();
 	}
 
 

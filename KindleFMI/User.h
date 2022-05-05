@@ -2,6 +2,8 @@
 #include "Book.h"
 #include <fstream>
 
+//fourth
+
 using namespace std;
 
 class User {
@@ -13,13 +15,21 @@ private:
 	int r;
 	int w;
 public:
+
+	User() {
+		this->username = nullptr;
+		this->password = nullptr;
+		this->read = nullptr;
+		this->written = nullptr;
+		this->r = 0;
+		this->w = 0;
+	}
 	User& operator=(const User& other) {
 		if (this != &other)
 		{
 			free();
 			copyFrom(other);
 		}
-
 		return *this;
 	}
 	~User()
@@ -41,9 +51,9 @@ public:
 		}
 		this->username = other.username;
 
-		int len = strlen(other.password);
-		this->password = new char[len + 1];
-		for (int i = 0; i < len + 1; i++) {
+		int lenght = strlen(other.password);
+		this->password = new char[lenght + 1];
+		for (int i = 0; i < lenght + 1; i++) {
 			this->password[i] = other.password[i];
 		}
 		this->password = other.password;
@@ -103,7 +113,7 @@ public:
 
 	bool hasRead(const char* title) {
 		for (int i = 0; i < r; i++)
-		{
+		{ //check for author too
 			if (strcmp(read[i].getHeadline(), title) == 0)
 			{
 				return true;
@@ -121,6 +131,7 @@ public:
 		}
 	}
 	void ReadBook(Book book) {
+		//check if already is read before adding to read*
 		for (int i = 0; i < book.getPagesCount(); i++)
 		{
 			cout << book.getPage(i);
@@ -166,6 +177,7 @@ public:
 		cout << book.getPage(number);
 	}
 	void ChangeBook(Book book, char* page) {
+		//add check
 		book.addPage(page);
 	}
 	//setters
