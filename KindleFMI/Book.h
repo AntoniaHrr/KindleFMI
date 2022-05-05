@@ -20,7 +20,7 @@ private:
 	int pages_count;
 	int comments_count;
 public:
-	Book() {
+	Book() { //yes
 		this->headline = nullptr;
 		this->author = nullptr;
 		this->rating = 0;
@@ -31,6 +31,10 @@ public:
 		this->r = nullptr;
 		this->r_count = 0;
 	}
+
+
+
+
 	void Save() {
 		int x = strlen(headline);
 		int y = strlen(author);
@@ -103,8 +107,8 @@ public:
 		{
 			place_holder[i] = r[i];
 		}
-		place_holder[r_count - 1] = Rate(rate, username);
 		delete[] r;
+		place_holder[r_count - 1] = Rate(rate, username);
 		r = place_holder;
 		delete[] place_holder;
 
@@ -123,13 +127,15 @@ public:
 			place_holder[i] = pages[i];
 		}
 		delete[] pages;
+
 		place_holder[pages_count-1].setNumber(pages_count);
 		place_holder[pages_count-1].setContent(page);
 		this->pages = place_holder;
+		delete[] place_holder;
 	}
 	void addComment(const char* comment, const char* author) {
 
-		comments_count=comments_count+2;
+		comments_count=comments_count + 2;
 		char** place_holder = new char*[comments_count];
 		for (int i = 0; i < comments_count - 2; i++)
 		{
@@ -137,7 +143,7 @@ public:
 		}
 		delete[] comments;
 		place_holder[comments_count - 2] = new char[strlen(author) + 1];
-		for (int i = 0; i < strlen(author)+1; i++)
+		for (int i = 0; i < strlen(author) + 1; i++)
 		{
 			place_holder[comments_count - 2][i] = author[i];
 		}
@@ -147,6 +153,7 @@ public:
 			place_holder[comments_count - 1][i] = comment[i];
 		}
 		this->comments = place_holder;
+		delete[] place_holder;
 		
 	}
 	//getters 

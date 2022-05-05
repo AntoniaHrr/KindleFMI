@@ -13,6 +13,50 @@ private:
 	int r;
 	int w;
 public:
+	User& operator=(const User& other) {
+		if (this != &other)
+		{
+			free();
+			copyFrom(other);
+		}
+
+		return *this;
+	}
+	~User()
+	{
+		free();
+	}
+	void free() {
+		delete[] username;
+		delete[] password;
+		delete[] read;
+		delete[] written;
+	}
+	void copyFrom(const User& other) {
+
+		int len = strlen(other.username);
+		this->username = new char[len + 1];
+		for (int i = 0; i < len + 1; i++) {
+			this->username[i] = other.username[i];
+		}
+		this->username = other.username;
+
+		int len = strlen(other.password);
+		this->password = new char[len + 1];
+		for (int i = 0; i < len + 1; i++) {
+			this->password[i] = other.password[i];
+		}
+		this->password = other.password;
+
+		for (int i = 0; i < w; i++) {
+			written[i] = other.written[i];
+		}
+		for (int i = 0; i < r; i++) {
+			read[i] = other.read[i];
+		}
+	}
+
+
 	void WriteBook(Book book) {
 		w++;
 		Book* place_holder = new Book[w];
@@ -23,7 +67,7 @@ public:
 		delete[] written;
 		place_holder[w - 1].setAuthor(book.getAuthor());
 		place_holder[w - 1].setHeadline(book.getHeadline());
-		place_holder[w - 1].setComments(book.getComments()); //??????
+		place_holder[w - 1].setComments(book.getComments());
 		place_holder[w - 1].setPagesCount(book.getPagesCount());
 		place_holder[w - 1].setCommentsCount(book.getCommentsCount());
 		place_holder[w - 1].setRating(book.getRating());

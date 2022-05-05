@@ -3,6 +3,8 @@
 #include <fstream>
 using namespace std;
 
+//fourth is done
+
 class Page {
 private:
 	char* content;
@@ -46,6 +48,7 @@ public:
         this->number = other.number;
     }
 
+    //setters
     void setNumber(int number) {
         this->number = number;
     }

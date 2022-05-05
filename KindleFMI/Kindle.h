@@ -5,6 +5,8 @@
 #include <fstream>
 #include <cstring>
 
+//fourth
+
 class Kindle {
 private:
 	User* users;
@@ -13,6 +15,38 @@ private:
 	int b=0;
 	User* logged;
 public:
+
+	Kindle& operator=(const Kindle& other) {
+		if (this != &other)
+		{
+			free();
+			copyFrom(other);
+		}
+
+		return *this;
+	}
+	~Kindle()
+	{
+		free();
+	}
+	void free() {
+		delete[] users;
+		delete[] books;
+		delete[] logged;
+	}
+	void copyFrom(const Kindle& other) {
+		for (int i = 0; i < u; i++) {
+			this->users[i] = other.users[i];
+		}
+		for (int i = 0; i < b; i++) {
+			this->books[i] = other.books[i];
+		}
+		this->b = other.b;
+		this->u = other.u;
+	}
+
+
+
 	void AddRate(const char* title, int rate) {
 		for (int i = 0; i < b; i++) {
 			if (strcmp(title, books[i].getHeadline()) == 0)

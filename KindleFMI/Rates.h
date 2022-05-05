@@ -19,9 +19,6 @@ public:
 		int len = strlen(username);
 		strcpy_s(this->username, len + 1, username);
 	}
-	void setTheRate(int r) {
-		this->r = r;
-	}
 	Rate& operator=(const Rate& other) {
 		if (this != &other)
 		{
@@ -43,7 +40,11 @@ public:
 		}
 		this->r = other.r;
 	}
-
+//setters
+	void setTheRate(int r) {
+		this->r = r;
+	}
+//getters
 	const char* getUsername() {
 		return username;
 	}
