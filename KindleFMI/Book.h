@@ -22,7 +22,12 @@ private:
 public:
 	Book();
 
-	void Save();
+	void Save(ofstream& myfile);
+
+	Book& operator=(const Book& other);
+	~Book();
+	void free();
+	void copyFrom(const Book& other);
 	//setters
 	void setAuthor(const char* author);
 
@@ -37,7 +42,7 @@ public:
 	void setPages(const Page* pages);
 
 	void setComments(const char* const* comments);
-
+	//
 	void AddRate(int rate, const char* username);
 
 	void addPage(const char* page);

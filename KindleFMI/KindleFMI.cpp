@@ -1,6 +1,5 @@
 #include <iostream>
 #include "Kindle.h"
-//4096
 
 using namespace std;
 

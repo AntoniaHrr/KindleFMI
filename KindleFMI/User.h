@@ -44,17 +44,24 @@ public:
 		delete[] read;
 		delete[] written;
 	}
+
 	void copyFrom(const User& other) {
 
-
+		int len = strlen(other.username);
+		this->username = new char[len+1];
 		strcpy(this->username, other.username);
 
+		int lenght = strlen(other.password);
+		this->password = new char[lenght + 1];
 		strcpy(this->password, other.password);
 
-		for (int i = 0; i < w; i++) {
+		this->written = new Book[other.w];
+		for (int i = 0; i < other.w; i++) {
 			written[i] = other.written[i];
 		}
-		for (int i = 0; i < r; i++) {
+
+		this->read = new Book[other.r];
+		for (int i = 0; i < other.r; i++) {
 			read[i] = other.read[i];
 		}
 	}
@@ -84,23 +91,23 @@ public:
 
 		this->written = place_holder;
 	}
-	void Save() {
+	void Save(ofstream& myfile) {
 		int x = strlen(username);
 		int y = strlen(password);
-		ofstream myfile("UsersInfo.bin", ios::binary | ios::app);
-		if (!myfile.is_open())
-		{
-			return;
-		}
+
 			myfile.write((const char*)&x, sizeof(int));
 			myfile.write((const char*)username, strlen(username));
 			myfile.write((const char*)&y, sizeof(int));
 			myfile.write((const char*)password, strlen(password));
+
 			myfile.write((const char*)&r, sizeof(r));
-			myfile.write((const char*)read, sizeof(Book) * r);
+			for (int i = 0; i < r; i++) {
+				read->Save(myfile);
+			}
 			myfile.write((const char*)&w, sizeof(w));
-			myfile.write((const char*)written, sizeof(Book) * w);
-			myfile.close();
+			for (int i = 0; i < w; i++) {
+				written->Save(myfile);
+			}
 			
 	}
 
@@ -170,23 +177,27 @@ public:
 		cout << book.getPage(number);
 	}
 	void ChangeBook(Book book, char* page) {
-		//add check
+		//add check if in w
 		book.addPage(page);
 	}
 	//setters
 	void setUsername(const char* username) {
-		int lenght = strlen(username);
-		this->username = new char[lenght + 1];
-		for (int i = 0; i < lenght + 1; i++) {
-			this->username[i] = username[i];
+		if (this->username != nullptr)
+		{
+			delete[] this->username;
 		}
+		int length = strlen(username);
+		this->username = new char[length + 1]; //+ 1 for '\0'
+		strcpy(this->username, username);
 	}
 	void setPassword(const char* password) {
-		int lenght = strlen(password);
-		this->password = new char[lenght + 1];
-		for (int i = 0; i < lenght + 1; i++) {
-			this->password[i] = password[i];
+		if (this->password != nullptr)
+		{
+			delete[] this->password;
 		}
+		int length = strlen(password);
+		this->password = new char[length + 1]; //+ 1 for '\0'
+		strcpy(this->password, password);
 	}
 	//getters
 	const char* getName() {

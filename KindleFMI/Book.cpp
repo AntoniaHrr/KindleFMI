@@ -18,6 +18,74 @@ Book::Book() {
 	this->r = nullptr;
 	this->r_count = 0;
 }
+
+
+Book& Book::operator=(const Book& other) {
+	if (this != &other)
+	{
+		free();
+		copyFrom(other);
+	}
+
+	return *this;
+}
+Book::~Book()
+{
+	free();
+}
+void Book::free() {
+	delete[] headline;
+	delete[] author;
+	delete[] r;
+	delete[] pages;
+	for (int i = 0; i < comments_count; i++)
+	{
+		delete[] comments[i];
+	}
+	delete[] comments;
+	
+}
+void Book::copyFrom(const Book& other) {
+
+	int len = strlen(other.headline);
+	this->headline = new char[len + 1];
+	for (int i = 0; i < len + 1; i++) {
+		this->headline[i] = other.headline[i];
+	}
+
+	int lenght = strlen(other.author);
+	this->author = new char[lenght + 1];
+	for (int i = 0; i < lenght + 1; i++) {
+		this->author[i] = other.author[i];
+	}
+
+	this->r = new Rate[other.r_count];
+	for (int i = 0; i < other.r_count; i++) {
+		r[i] = other.r[i];
+	}
+
+	this->pages = new Page[other.pages_count];
+	for (int i = 0; i < other.pages_count; i++) {
+		pages[i] = other.pages[i];
+	}
+
+	this->rating = other.rating;
+	this->r_count = other.r_count;
+	this->comments_count = other.comments_count;
+	this->pages_count = other.pages_count;
+
+	this->comments = new char* [comments_count];
+	for (int i = 0; i < comments_count; i++)
+	{
+		int len = strlen(other.comments[i]);
+		this->comments[i] = new char[len + 1];
+		for (int j = 0; j < len + 1; j++)
+		{
+			comments[i][j] = other.comments[i][j];
+		}
+	}
+}
+
 void Book::setRating(double rating) {
 	this->rating = rating;
 }
@@ -61,26 +129,35 @@ void Book::setAuthor(const char* author) {
 	}
 }
 
-void Book::Save() {
+void Book::Save(ofstream& myfile) {
 	int x = strlen(headline);
 	int y = strlen(author);
-	ofstream myfile("BooksInfo.bin", ios::binary | ios::app);
-	if (!myfile.is_open())
-	{
-		return;
-	}
 	myfile.write((const char*)&x, sizeof(int));
 	myfile.write((const char*)headline, strlen(headline));
 	myfile.write((const char*)&y, sizeof(int));
 	myfile.write((const char*)author, strlen(author));
 	myfile.write((const char*)&rating, sizeof(rating));
 	myfile.write((const char*)&r_count, sizeof(int));
-	myfile.write((const char*)&r, sizeof(Rate) * r_count);
+
+	for (int i = 0; i < r_count; i++)
+	{
+		r->Save(myfile);
+	}
+	
 	myfile.write((const char*)&pages_count, sizeof(int));
-	myfile.write((const char*)pages, sizeof(Page) * pages_count);
+	for (int i = 0; i < pages_count; i++) {
+		pages->Save(myfile);
+	}
+
 	myfile.write((const char*)&comments_count, sizeof(int));
-	myfile.write((const char*)comments, sizeof(comments) * comments_count); //???
-	myfile.close();
+	for (int j = 0; j < comments_count; j++)
+	{
+		int z = strlen(comments[j]);
+		myfile.write((const char*)&z, sizeof(int));
+		myfile.write((const char*)comments[j], strlen(comments[j]));
+	}
+	
+	
 }
 
 void Book::AddRate(int rate, const char* username) {
@@ -100,8 +177,7 @@ void Book::AddRate(int rate, const char* username) {
 
 	place_holder[r_count - 1] = Rate(rate, username);
 	r = place_holder;
-	delete[] place_holder;
-	//new function
+	//?
 	rating = 0;
 	for (int i = 0; i < r_count; i++) {
 		rating = rating + r[i].getTheRate();
@@ -121,7 +197,6 @@ void Book::addPage(const char* page) {
 	place_holder[pages_count - 1].setNumber(pages_count);
 	place_holder[pages_count - 1].setContent(page);
 	this->pages = place_holder;
-	delete[] place_holder;
 }
 
 void Book::addComment(const char* comment, const char* author) {

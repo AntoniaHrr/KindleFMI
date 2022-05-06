@@ -16,11 +16,12 @@ private:
 	User* logged;
 public:
 	Kindle() {
-		this->users = NULL;
+		this->users = nullptr;
 		this->u = 0;
 		this->b = 0;
 		this->logged = nullptr;
 		this->books = nullptr;
+		//readfrom
 	}
 
 	Kindle& operator=(const Kindle& other) {
@@ -39,22 +40,34 @@ public:
 	void free() {
 		delete[] users;
 		delete[] books;
-		delete[] logged;
+		delete logged;
 	}
 	void copyFrom(const Kindle& other) {
-		for (int i = 0; i < u; i++) {
+
+		users = new User[other.u];
+		for (int i = 0; i < other.u; i++) {
 			this->users[i] = other.users[i];
 		}
-		for (int i = 0; i < b; i++) {
+		books = new Book[other.b];
+		for (int i = 0; i < other.b; i++) {
 			this->books[i] = other.books[i];
 		}
+		logged = new User(*other.logged);
+
 		this->b = other.b;
 		this->u = other.u;
 	}
 
 	//////////////////////////////////////////////
-	void UpdateBook(Book book, const char* content) {
-		book.addPage(content);
+	void UpdateBook(const char* title,const char* author, const char* content) {
+		for (int i = 0; i < b; i++)
+		{
+			if (strcmp(books[i].getHeadline(), title) == 0 && strcmp(books[i].getAuthor(), author)==0)
+			{
+				books[i].addPage(content);
+			}
+		}
+		
 	}
 	/////////////////////////////////////////////
 	void AddRate(const char* title, int rate) {
@@ -69,7 +82,54 @@ public:
 		}
 	}
 
-	void Write(char* author, char* title, char* content) {
+	void AddComment(const char* title, const char* comment) {
+		for (int i = 0; i < b; i++) {
+			if (strcmp(title, books[i].getHeadline()) == 0)
+			{
+				if (logged->hasRead(title))
+				{
+					books[i].addComment(comment, logged->getName());
+				}
+			}
+		}
+	}
+
+	void ViewComments(char* title) {
+		for (int i = 0; i < b; i++) {
+			if (strcmp(title, books[i].getHeadline()) == 0)
+			{
+				for (int j = 0; j < books[i].getCommentsCount(); j++)
+				{
+					cout << books[i].getComments()[j] << endl;
+				}
+					
+			}
+		}
+	}
+
+	void ReadPageFromBook(const char* title, int number) {
+		for (int i = 0; i < b; i++) {
+			if (strcmp(title, books[i].getHeadline()) == 0) {
+				
+					cout << books[i].getPage(number) << endl;
+
+			}
+		}
+	}
+
+	void ReadBook(const char* title) {
+		for (int i = 0; i < b; i++) {
+			if (strcmp(title, books[i].getHeadline()) == 0) {
+				for (int j = 0; j < books[i].getPagesCount(); j++)
+				{
+					cout << books[i].getPage(j)<<endl;
+				}
+
+			}
+		}
+	}
+
+	void WriteBook(const char* author,const char* title,const char* content) {
 		Book book;
 		book.setAuthor(author);
 		book.setHeadline(title);
@@ -95,7 +155,6 @@ public:
 
 
 		this->books = place_holder;
-		delete[] place_holder;
 
 
 		for (int i = 0; i < u; i++)
@@ -116,20 +175,20 @@ public:
 			return;
 		}
 		for (int i = 0; i < u; i++) {
-			users[i].Save();
+			users[i].Save(myfileUsers);
 		}
 		myfileUsers.close();
 
-		ofstream myfile("BooksInfo.bin", ios::binary); 
-		if (!myfile.is_open())
+		ofstream myfileBooks("BooksInfo.bin", ios::binary); 
+		if (!myfileBooks.is_open())
 		{
 			return;
 		}
 		for (int i = 0; i < b; i++)
 		{
-			books[i].Save();
+			books[i].Save(myfileBooks);
 		}
-		myfile.close();
+		myfileBooks.close();
 	}
 
 	void Register(const char* name,const char* password) {
@@ -146,18 +205,14 @@ public:
 			for (int i = 0; i < u - 1; i++)
 			{
 				place_holder[i] = users[i];
-			delete[] this->users;
 			}
+			delete[] this->users;
+
 			place_holder[u - 1].setUsername(name);
 			place_holder[u - 1].setPassword(password);
 			
-			for (int i = 0; i < u; i++)
-			{
-			this->users[i] = place_holder[i];
-			}
 			
-			
-			delete[] place_holder;
+			this->users = place_holder;
 	
 		
 	}
@@ -187,10 +242,5 @@ public:
 		delete[] logged;
 		logged = nullptr;
 	}
-
-	const char* getUsername(){
-		return users[1].getName();
-	}
-
 
 };
