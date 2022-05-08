@@ -53,3 +53,10 @@ void Rate::Save(ofstream& myfile) {
 	myfile.write((const char*)&x, sizeof(int));
 	myfile.write((const char*)username, strlen(username));
 }
+
+void Rate::Read(ifstream& myfile) {
+	int x = strlen(username);
+	myfile.read((char*)&r, sizeof(int));
+	myfile.read((char*)&x, sizeof(int));
+	myfile.read((char*)username, strlen(username));
+}

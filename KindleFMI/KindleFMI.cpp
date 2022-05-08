@@ -45,14 +45,11 @@ int main()
             cout << "enter content: ";
             cin.getline(content, 100);
             
-            kindleFMI.Write(author, title, content);
+            kindleFMI.WriteBook(author, title, content);
 
         }
         if (strcmp(input, "quit") == 0) {
             kindleFMI.Quit();
-        }
-        if (strcmp(input, "get") == 0) {
-            cout << kindleFMI.getUsername() << endl;
         }
 
     }

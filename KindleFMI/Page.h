@@ -17,6 +17,7 @@ public:
     void free();
     void copyFrom(const Page& other);
     void Save(ofstream& myfile);
+    void Read(ifstream& myfile);
 
     //setters
     void setNumber(int number);

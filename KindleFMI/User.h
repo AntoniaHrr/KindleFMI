@@ -4,8 +4,6 @@
 #include <cstring>
 #pragma warning(disable: 4996)
 
-//fourth
-
 using namespace std;
 
 class User {
@@ -18,226 +16,27 @@ private:
 	int w;
 public:
 
-	User() {
-		this->username = nullptr;
-		this->password = nullptr;
-		this->read = nullptr;
-		this->written = nullptr;
-		this->r = 0;
-		this->w = 0;
-	}
-	User& operator=(const User& other) {
-		if (this != &other)
-		{
-			free();
-			copyFrom(other);
-		}
-		return *this;
-	}
-	~User()
-	{
-		free();
-	}
-	void free() {
-		delete[] username;
-		delete[] password;
-		delete[] read;
-		delete[] written;
-	}
-
-	void copyFrom(const User& other) {
-
-		int len = strlen(other.username);
-		this->username = new char[len+1];
-		strcpy(this->username, other.username);
-
-		int lenght = strlen(other.password);
-		this->password = new char[lenght + 1];
-		strcpy(this->password, other.password);
-
-		this->written = new Book[other.w];
-		for (int i = 0; i < other.w; i++) {
-			written[i] = other.written[i];
-		}
-
-		this->read = new Book[other.r];
-		for (int i = 0; i < other.r; i++) {
-			read[i] = other.read[i];
-		}
-	}
-
-
-	void WriteBook(Book book) {
-		w++;
-		Book* place_holder = new Book[w];
-		for (int i = 0; i < w - 1; i++)
-		{
-			place_holder[i] = written[i];
-		}
-		delete[] written;
-		place_holder[w - 1].setAuthor(book.getAuthor());
-		place_holder[w - 1].setHeadline(book.getHeadline());
-		place_holder[w - 1].setComments(book.getComments());
-		place_holder[w - 1].setPagesCount(book.getPagesCount());
-		place_holder[w - 1].setCommentsCount(book.getCommentsCount());
-		place_holder[w - 1].setRating(book.getRating());
-
-		Page* place_holderPages = new Page[book.getPagesCount()];
-		for (int i = 0; i < book.getPagesCount(); i++)
-		{
-			place_holderPages[i] = book.getPage(i);
-		}
-		place_holder[w - 1].setPages(place_holderPages);
-
-		this->written = place_holder;
-	}
-	void Save(ofstream& myfile) {
-		int x = strlen(username);
-		int y = strlen(password);
-
-			myfile.write((const char*)&x, sizeof(int));
-			myfile.write((const char*)username, strlen(username));
-			myfile.write((const char*)&y, sizeof(int));
-			myfile.write((const char*)password, strlen(password));
-
-			myfile.write((const char*)&r, sizeof(r));
-			for (int i = 0; i < r; i++) {
-				read->Save(myfile);
-			}
-			myfile.write((const char*)&w, sizeof(w));
-			for (int i = 0; i < w; i++) {
-				written->Save(myfile);
-			}
-			
-	}
-
-	bool hasRead(const char* title) {
-		for (int i = 0; i < r; i++)
-		{ //check for author too
-			if (strcmp(read[i].getHeadline(), title) == 0)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
-	void ReadComments(Book book) {
-		for (int i = 0; i < book.getCommentsCount(); i=i+2)
-		{
-			cout << book.getComments()[i];
-			cout << book.getComments()[i + 1];
-			cout << endl;
-		}
-	}
-	void ReadBook(Book book) {
-		//check if already is read before adding to read*
-		for (int i = 0; i < book.getPagesCount(); i++)
-		{
-			cout << book.getPage(i);
-			cout << endl;
-		}
-		r++;
-		Book* place_holder = new Book[r];
-		for (int i = 0; i < r - 1; i++)
-		{
-			place_holder[i] = read[i];
-		}
-		delete[] read;
-		place_holder[r - 1].setAuthor(book.getAuthor());
-		place_holder[r - 1].setHeadline(book.getHeadline());
-		place_holder[r - 1].setComments(book.getComments());
-		place_holder[r - 1].setPagesCount(book.getPagesCount());
-		place_holder[r - 1].setCommentsCount(book.getCommentsCount());
-		place_holder[r - 1].setRating(book.getRating());
-
-		Page* place_holderPages = new Page[book.getPagesCount()];
-		for (int i = 0; i < book.getPagesCount(); i++)
-		{
-			place_holderPages[i] = book.getPage(i);
-		}
-		place_holder[r - 1].setPages(place_holderPages);
-
-		this->read = place_holder;
-	}
-	void WriteComment(Book book,const char* comment) {
-		for (int i = 0; i < r; i++)
-		{
-			if(Equal(book.getHeadline(), read[i].getHeadline()))
-			{
-				book.addComment(comment, username);
-				return;
-			}
-		}
-	}
-	void ReadPage(Book book, int number) {
-		if (number > book.getPagesCount()) {
-			return;
-		}
-		cout << book.getPage(number);
-	}
-	void ChangeBook(Book book, char* page) {
-		//add check if in w
-		book.addPage(page);
-	}
+	User();
+	User& operator=(const User& other);
+	~User();
+	void free();
+	void copyFrom(const User& other);
+	void WriteBook(Book book);
+	void Save(ofstream& myfile);
+	void Read(ifstream& myfile);
+	bool hasRead(const char* title);
+	void ReadComments(Book book);
+	void ReadBook(Book book);
+	void WriteComment(Book book, const char* comment);
+	void ReadPage(Book book, int number);
+	void ChangeBook(Book book, char* page);
 	//setters
-	void setUsername(const char* username) {
-		if (this->username != nullptr)
-		{
-			delete[] this->username;
-		}
-		int length = strlen(username);
-		this->username = new char[length + 1]; //+ 1 for '\0'
-		strcpy(this->username, username);
-	}
-	void setPassword(const char* password) {
-		if (this->password != nullptr)
-		{
-			delete[] this->password;
-		}
-		int length = strlen(password);
-		this->password = new char[length + 1]; //+ 1 for '\0'
-		strcpy(this->password, password);
-	}
+	void setUsername(const char* username);
+	void setPassword(const char* password);
 	//getters
-	const char* getName() {
-		return this->username;
-	}
-	const char* getPassword() {
-		return this->password;
-	}
+	const char* getName();
+	const char* getPassword();
 
-	bool Equal(const char* task, const char* TaskOne)
-	{
-		int count = 0;
-		int i = 0;
-		int j = 0;
-		while (TaskOne[j] != '\0')
-		{
-			j++;
-		}
-		while (task[i] != '\0')
-		{
-			if (task[i] == TaskOne[i])
-			{
-				count++;
-			}
-			i++;
-		}
-		if (i > j || i == j) {
-			if (i == count)
-			{
-				return true;
-			}
-			else return false;
-		}
-		else if (j > i) {
-			if (j == count)
-			{
-				return true;
-			}
-			else return false;
-		}
-	}
+	bool Equal(const char* task, const char* TaskOne);
 
 };

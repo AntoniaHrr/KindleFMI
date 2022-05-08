@@ -129,6 +129,36 @@ void Book::setAuthor(const char* author) {
 	}
 }
 
+void Book::Read(ifstream& myfile) {
+	int x = strlen(headline);
+	int y = strlen(author);
+	myfile.read(( char*)&x, sizeof(int));
+	myfile.read((char*)headline, strlen(headline));
+	myfile.read((char*)&y, sizeof(int));
+	myfile.read((char*)author, strlen(author));
+	myfile.read((char*)&rating, sizeof(rating));
+	myfile.read((char*)&r_count, sizeof(int));
+
+	for (int i = 0; i < r_count; i++)
+	{
+		r->Read(myfile);
+	}
+
+	myfile.read((char*)&pages_count, sizeof(int));
+	for (int i = 0; i < pages_count; i++) {
+		pages->Read(myfile);
+	}
+
+	myfile.read((char*)&comments_count, sizeof(int));
+	for (int j = 0; j < comments_count; j++)
+	{
+		int z = strlen(comments[j]);
+		myfile.read((char*)&z, sizeof(int));
+		myfile.read((char*)comments[j], strlen(comments[j]));
+	}
+
+}
+
 void Book::Save(ofstream& myfile) {
 	int x = strlen(headline);
 	int y = strlen(author);

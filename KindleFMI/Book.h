@@ -23,6 +23,7 @@ public:
 	Book();
 
 	void Save(ofstream& myfile);
+	void Read(ifstream& myfile);
 
 	Book& operator=(const Book& other);
 	~Book();

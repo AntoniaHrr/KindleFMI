@@ -13,6 +13,7 @@ private:
 public:
 	Rate();
 	void Save(ofstream& myfile);
+	void Read(ifstream& myfile);
 	Rate(int r, const char* username);
 	Rate& operator=(const Rate& other);
 	void free();

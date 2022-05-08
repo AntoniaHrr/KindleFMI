@@ -41,6 +41,13 @@ void Page::copyFrom(const Page& other) {
     this->number = other.number;
 }
 
+void Page::Read(ifstream& myfile) {
+    int x = strlen(content);
+    myfile.read(( char*)&number, sizeof(int));
+    myfile.read((char*)&x, sizeof(int));
+    myfile.read((char*)content, strlen(content));
+}
+
 void Page::Save(ofstream& myfile) {
     int x = strlen(content);
     myfile.write((const char*)&number, sizeof(int));

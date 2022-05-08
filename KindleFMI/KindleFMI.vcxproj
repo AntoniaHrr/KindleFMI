@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Book.cpp" />
+    <ClCompile Include="Kindle.cpp" />
     <ClCompile Include="KindleFMI.cpp" />
     <ClCompile Include="Page.cpp" />
     <ClCompile Include="Rates.cpp" />
