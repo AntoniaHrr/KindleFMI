@@ -13,7 +13,6 @@ Kindle::Kindle() {
 	this->b = 0;
 	this->logged = nullptr;
 	this->books = nullptr;
-	//readfrom
 }
 
 Kindle& Kindle::operator=(const Kindle& other) {
@@ -49,19 +48,42 @@ void Kindle::copyFrom(const Kindle& other) {
 	this->b = other.b;
 	this->u = other.u;
 }
+void Kindle::ViewRating(char* title) {
+	if (logged == nullptr) {
+		return;
+	}
+	for (int i = 0; i < b; i++) {
+		if (strcmp(title, books[i].getHeadline()) == 0)
+		{
+			cout << books[i].getRating();
+
+		}
+	}
+
+}
 
 void Kindle::UpdateBook(const char* title, const char* author, const char* content) {
+	if (logged == nullptr) {
+		return;
+	}
 	for (int i = 0; i < b; i++)
 	{
 		if (strcmp(books[i].getHeadline(), title) == 0 && strcmp(books[i].getAuthor(), author) == 0)
 		{
-			books[i].addPage(content);
+			if (logged->hasWritten(title)) {
+				books[i].addPage(content);
+			}
+			else cout << "You are not allowed to update other user's book!\n";
+			
 		}
 	}
 
 }
 
 void Kindle::AddRate(const char* title, int rate) {
+	if (logged == nullptr) {
+		return;
+	}
 	for (int i = 0; i < b; i++) {
 		if (strcmp(title, books[i].getHeadline()) == 0)
 		{
@@ -75,6 +97,9 @@ void Kindle::AddRate(const char* title, int rate) {
 }
 
 void Kindle::AddComment(const char* title, const char* comment) {
+	if (logged == nullptr) {
+		return;
+	}
 	for (int i = 0; i < b; i++) {
 		if (strcmp(title, books[i].getHeadline()) == 0)
 		{
@@ -88,6 +113,9 @@ void Kindle::AddComment(const char* title, const char* comment) {
 }
 
 void Kindle::ViewComments(char* title) {
+	if (logged == nullptr) {
+		return;
+	}
 	for (int i = 0; i < b; i++) {
 		if (strcmp(title, books[i].getHeadline()) == 0)
 		{
@@ -101,21 +129,28 @@ void Kindle::ViewComments(char* title) {
 }
 
 void Kindle::ReadPageFromBook(const char* title, int number) {
+	if (logged == nullptr) {
+		return;
+	}
 	for (int i = 0; i < b; i++) {
 		if (strcmp(title, books[i].getHeadline()) == 0) {
-
-			cout << books[i].getPage(number) << endl;
-
+			if (books[i].getPagesCount() < number) {
+				cout << "Page not found";
+			}
+			else cout << books[i].getPage(number).getContent() << endl;
 		}
 	}
 }
 
 void Kindle::ReadBook(const char* title) {
+	if (logged == nullptr) {
+		return;
+	}
 	for (int i = 0; i < b; i++) {
 		if (strcmp(title, books[i].getHeadline()) == 0) {
 			for (int j = 0; j < books[i].getPagesCount(); j++)
 			{
-				cout << books[i].getPage(j) << endl;
+				cout<<books[i].getPage(j).getContent() << endl;
 			}
 			logged->ReadBook(books[i].getAuthor(),books[i].getHeadline());
 
@@ -124,6 +159,10 @@ void Kindle::ReadBook(const char* title) {
 }
 
 void Kindle::WriteBook(const char* author, const char* title, const char* content) {
+	if (logged == nullptr) {
+		cout << "not logged"<<endl;
+		return;
+	}
 	Book book;
 	book.setAuthor(author);
 	book.setHeadline(title);
@@ -143,12 +182,39 @@ void Kindle::WriteBook(const char* author, const char* title, const char* conten
 		logged->WriteBook(author, title, content);
 
 }
+void Kindle::ReadUsersandBooks() {
+	ifstream myfileUsers("UsersInfo.bin", ios::binary);
+	if (!myfileUsers.is_open())
+	{
+		return;
+	}
+	myfileUsers.read((char*)&u, sizeof(u));
+	users = new User[u];
+	for (int i = 0; i < u; i++) {
+		users[i].Read(myfileUsers);
+	}
+	myfileUsers.close();
+
+	ifstream myfileBooks("BooksInfo.bin", ios::binary);
+	if (!myfileBooks.is_open())
+	{
+		return;
+	}
+	myfileBooks.read((char*)&b, sizeof(b));
+	books = new Book[b];
+	for (int i = 0; i < b; i++) {
+		books[i].Read(myfileBooks);
+	}
+	myfileBooks.close();
+
+}
 void Kindle::SaveUsersandBooks() {
 	ofstream myfileUsers("UsersInfo.bin", ios::binary);
 	if (!myfileUsers.is_open())
 	{
 		return;
 	}
+	myfileUsers.write((char*)&u, sizeof(u));
 	for (int i = 0; i < u; i++) {
 		users[i].Save(myfileUsers);
 	}
@@ -159,14 +225,19 @@ void Kindle::SaveUsersandBooks() {
 	{
 		return;
 	}
+	myfileBooks.write((char*)&b, sizeof(b));
 	for (int i = 0; i < b; i++)
 	{
 		books[i].Save(myfileBooks);
 	}
 	myfileBooks.close();
+
 }
 
 void Kindle::Register(const char* name, const char* password) {
+	if (logged != nullptr) {
+		return;
+	}
 	for (int i = 0; i < u; i++)
 	{
 		if (strcmp(users[i].getName(), name) == 0)
@@ -193,6 +264,10 @@ void Kindle::Register(const char* name, const char* password) {
 }
 
 bool Kindle::Login(const char* name, const char* password) {
+	if (logged != nullptr) {
+		return false;
+	}
+
 	for (int i = 0; i < u; i++)
 	{
 		if (strcmp(users[i].getName(), name) == 0 && strcmp(users[i].getPassword(), password) == 0)
@@ -206,6 +281,7 @@ bool Kindle::Login(const char* name, const char* password) {
 }
 
 void Kindle::ViewContent() {
+	
 	if (b == 0) {
 		cout << "No books\n";
 	}
@@ -216,7 +292,8 @@ void Kindle::ViewContent() {
 }
 
 void Kindle::Quit() {
+
 	SaveUsersandBooks();
-	delete[] logged;
+	delete logged;
 	logged = nullptr;
 }

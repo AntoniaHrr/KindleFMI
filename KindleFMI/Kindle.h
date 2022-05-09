@@ -27,6 +27,7 @@ public:
 	void AddComment(const char* title, const char* comment);
 
 	void ViewComments(char* title);
+	void ViewRating(char* title);
 
 	void ReadPageFromBook(const char* title, int number);
 
@@ -34,6 +35,7 @@ public:
 
 	void WriteBook(const char* author, const char* title, const char* content);
 	void SaveUsersandBooks();
+	void ReadUsersandBooks();
 
 	void Register(const char* name, const char* password);
 
@@ -42,5 +44,7 @@ public:
 	void ViewContent();
 
 	void Quit();
+
+	
 
 };

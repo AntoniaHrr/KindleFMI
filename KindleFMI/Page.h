@@ -11,6 +11,7 @@ private:
     int number;
 public:
     Page();
+    Page(const Page& other);
     Page(const char* content, int number);
     Page& operator=(const Page& other);
     ~Page();
@@ -19,7 +20,7 @@ public:
     void Save(ofstream& myfile);
     void Read(ifstream& myfile);
 
-   const char* getContent() {
+   const char* getContent() const {
         return content;
     }
 
@@ -28,8 +29,5 @@ public:
 
     void setContent(const char* content);
 
-    friend ostream& operator<<(ostream& out, const Page& page) {
-        return out << page.content << std::endl;
-    }
 
 };

@@ -34,6 +34,10 @@ void User::free() {
 	delete[] written;
 }
 
+User::User(const User& other) {
+	copyFrom(other);
+}
+
 void User::copyFrom(const User& other) {
 
 	int len = strlen(other.username);
@@ -78,24 +82,42 @@ void User::Save(ofstream& myfile) {
 }
 
 void User::Read(ifstream& myfile) {
-	int x = strlen(username);
-	int y = strlen(password);
+		int x = 0;
+		int y = 0;
 
 		myfile.read((char*)&x, sizeof(int));
-		myfile.read((char*)username, strlen(username));
+		username = new char[x+1];
+		username[x] = '\0';
+		myfile.read((char*)username, x);
+
 		myfile.read((char*)&y, sizeof(int));
-		myfile.read((char*)password, strlen(password));
+		password = new char[y + 1];
+		password[y] = '\0';
+		myfile.read((char*)password, y);
 
 		myfile.read((char*)&r, sizeof(r));
+		read = new Book[r];
 	for (int i = 0; i < r; i++) {
-		read->Read(myfile);
+		read[i].Read(myfile);
 	}
 		myfile.read((char*)&w, sizeof(w));
+		written = new Book[w];
 	for (int i = 0; i < w; i++) {
-		written->Read(myfile);
+		written[i].Read(myfile);
 	}
 
 	
+}
+
+bool User::hasWritten(const char* title) {
+	for (int i = 0; i < w; i++)
+	{ //check for author too
+		if (strcmp(written[i].getHeadline(), title) == 0)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 bool User::hasRead(const char* title) {
@@ -133,6 +155,12 @@ void User::WriteBook(const char* author, const char* title, const char* content)
 	this->written = place_holder;
 }
 void User::ReadBook(const char* author, const char* headline) {
+	for (int i = 0; i < r; i++) {
+		if (strcmp(read[i].getHeadline(), headline) == 0) {
+			cout << "Already read that book!"<<endl;
+			return;
+		}
+	}
 	Book Newbook;
 	Newbook.setAuthor(author);
 	Newbook.setHeadline(headline);
@@ -143,6 +171,7 @@ void User::ReadBook(const char* author, const char* headline) {
 		place_holder[i] = read[i];
 	}
 	delete[] read;
+	
 	place_holder[r - 1] = Newbook;
 	this->read = place_holder;
 }
@@ -160,7 +189,7 @@ void User::ReadPage(Book book, int number) {
 	if (number > book.getPagesCount()) {
 		return;
 	}
-	cout << book.getPage(number);
+	cout << book.getPage(number).getContent();
 }
 void User::ChangeBook(Book book, char* page) {
 	//add check if in w

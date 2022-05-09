@@ -17,6 +17,7 @@ private:
 public:
 
 	User();
+	User(const User& other);
 	User& operator=(const User& other);
 	~User();
 	void free();
@@ -25,6 +26,7 @@ public:
 	void Save(ofstream& myfile);
 	void Read(ifstream& myfile);
 	bool hasRead(const char* title);
+	bool hasWritten(const char* title);
 	void ReadComments(Book book);
 	void ReadBook(const char* author, const char* headline);
 	void WriteComment(Book book, const char* comment);

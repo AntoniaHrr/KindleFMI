@@ -55,8 +55,12 @@ void Rate::Save(ofstream& myfile) {
 }
 
 void Rate::Read(ifstream& myfile) {
-	int x = strlen(username);
+	int x = 0;
 	myfile.read((char*)&r, sizeof(int));
 	myfile.read((char*)&x, sizeof(int));
-	myfile.read((char*)username, strlen(username));
+	username = new char[x + 1];
+	username[x] = '\0';
+	myfile.read((char*)&username, x);
+
+	
 }

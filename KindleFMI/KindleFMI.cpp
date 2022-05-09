@@ -6,11 +6,14 @@ using namespace std;
 int main()
 {
     Kindle kindleFMI;
+    kindleFMI.ReadUsersandBooks();
     char input[4096];
+
    
     while (true) {
-        cout << "command: ";
-        cin.getline(input, 4096);
+        cout << "command:";
+        cin.getline(input, 4069);
+        
         if (strcmp(input, "login") == 0) {
             char username[100];
             char password[100];
@@ -52,12 +55,12 @@ int main()
         if (strcmp(input, "list") == 0) {
             kindleFMI.ViewContent();
         }
-        /*if (strcmp(input, "view grade of book") == 0) {
+        if (strcmp(input, "view grade of book") == 0) {
             char title[100];
             cout << "enter title: ";
             cin.getline(title, 100);
-            kindleFMI;
-        }*/
+            kindleFMI.ViewRating(title);
+        }
         if (strcmp(input, "grade book") == 0) {
             char title[100];
             cout << "enter title: ";
@@ -65,6 +68,7 @@ int main()
             int grade = 0;
             cout << "Rate the book:";
             cin >> grade;
+            cin.ignore();
             kindleFMI.AddRate(title, grade);
         }
         if (strcmp(input, "view comments") == 0) {
@@ -72,6 +76,16 @@ int main()
             cout << "enter title: ";
             cin.getline(title, 100);
             kindleFMI.ViewComments(title);
+        }
+        if (strcmp(input, "read page from book") == 0) {
+            char title[100];
+            cout << "enter title: ";
+            cin.getline(title, 100);
+            int page;
+            cout << "enter page:";
+            cin>> page;
+            cin.ignore();
+            kindleFMI.ReadPageFromBook(title, page);
         }
         if (strcmp(input, "leave comment") == 0) {
             char title[100];

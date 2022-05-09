@@ -7,6 +7,9 @@ Page::Page() {
     this->number = 0;
     this->content = nullptr;
 }
+Page::Page(const Page& other) {
+    copyFrom(other);
+}
 Page::Page(const char* content, int number) {
     this->number = number;
     int lenght = strlen(content);
@@ -42,10 +45,12 @@ void Page::copyFrom(const Page& other) {
 }
 
 void Page::Read(ifstream& myfile) {
-    int x = strlen(content);
+    int x = 0;
     myfile.read(( char*)&number, sizeof(int));
     myfile.read((char*)&x, sizeof(int));
-    myfile.read((char*)content, strlen(content));
+    content = new char[x + 1];
+    content[x] = '\0';
+    myfile.read((char*)content, x);
 }
 
 void Page::Save(ofstream& myfile) {
