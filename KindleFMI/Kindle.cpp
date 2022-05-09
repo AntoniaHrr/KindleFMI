@@ -50,7 +50,6 @@ void Kindle::copyFrom(const Kindle& other) {
 	this->u = other.u;
 }
 
-//////////////////////////////////////////////
 void Kindle::UpdateBook(const char* title, const char* author, const char* content) {
 	for (int i = 0; i < b; i++)
 	{
@@ -61,7 +60,7 @@ void Kindle::UpdateBook(const char* title, const char* author, const char* conte
 	}
 
 }
-/////////////////////////////////////////////
+
 void Kindle::AddRate(const char* title, int rate) {
 	for (int i = 0; i < b; i++) {
 		if (strcmp(title, books[i].getHeadline()) == 0)
@@ -138,12 +137,14 @@ void Kindle::WriteBook(const char* author, const char* title, const char* conten
 	place_holder[b - 1].setHeadline(book.getHeadline());
 	place_holder[b - 1].setPagesCount(book.getPagesCount());
 
-	Page* place_holderPages = new Page[book.getPagesCount()];
+
+	/*Page* place_holderPages = new Page[book.getPagesCount()];
 	for (int i = 0; i < book.getPagesCount(); i++)
 	{
 		place_holderPages[i] = book.getPage(i);
 	}
-	place_holder[b - 1].setPages(place_holderPages);
+	
+	place_holder[b - 1].setPages(place_holderPages);*/
 
 
 	this->books = place_holder;

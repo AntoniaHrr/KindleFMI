@@ -19,6 +19,10 @@ public:
     void Save(ofstream& myfile);
     void Read(ifstream& myfile);
 
+   const char* getContent() {
+        return content;
+    }
+
     //setters
     void setNumber(int number);
 

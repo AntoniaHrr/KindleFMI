@@ -20,8 +20,9 @@ int main()
             cin.getline(password, 100);
             if (kindleFMI.Login(username, password) == 0)
             {
-                cout << "No user found! Please sign up!"<<endl;
+                cout << "No user found! Please sign up!" << endl;
             }
+            else cout << "Login successful!"<<endl;
       
         }
         if (strcmp(input, "register") == 0) {
@@ -47,6 +48,12 @@ int main()
             
             kindleFMI.WriteBook(author, title, content);
 
+        }
+        if (strcmp(input, "read") == 0) {
+            char title[100];
+            cout << "enter title:";
+                cin.getline(title, 100);
+                kindleFMI.ReadBook(title);
         }
         if (strcmp(input, "quit") == 0) {
             kindleFMI.Quit();
