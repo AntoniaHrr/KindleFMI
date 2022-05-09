@@ -69,6 +69,7 @@ void Kindle::AddRate(const char* title, int rate) {
 			{
 				books[i].AddRate(rate, logged->getName());
 			}
+			else cout << "You must first read the book!\n";
 		}
 	}
 }
@@ -81,6 +82,7 @@ void Kindle::AddComment(const char* title, const char* comment) {
 			{
 				books[i].addComment(comment, logged->getName());
 			}
+			else cout << "You must first read the book!\n";
 		}
 	}
 }
@@ -115,6 +117,7 @@ void Kindle::ReadBook(const char* title) {
 			{
 				cout << books[i].getPage(j) << endl;
 			}
+			logged->ReadBook(books[i].getAuthor(),books[i].getHeadline());
 
 		}
 	}
@@ -133,32 +136,11 @@ void Kindle::WriteBook(const char* author, const char* title, const char* conten
 		place_holder[i] = books[i];
 	}
 	delete[] books;
-	place_holder[b - 1].setAuthor(book.getAuthor());
-	place_holder[b - 1].setHeadline(book.getHeadline());
-	place_holder[b - 1].setPagesCount(book.getPagesCount());
-
-
-	Page* place_holderPages = new Page[book.getPagesCount()];
-	for (int i = 0; i < book.getPagesCount(); i++)
-	{
-		place_holderPages[i] = book.getPage(i);
-	}
-	
-	place_holder[b - 1].setPages(place_holderPages);
+	place_holder[b - 1] = book;
 
 
 	this->books = place_holder;
-
-
-	for (int i = 0; i < u; i++)
-	{
-		if (strcmp(users[i].getName(), author) == 0)
-		{
-			users[i].WriteBook(book);
-			return;
-		}
-
-	}
+		logged->WriteBook(author, title, content);
 
 }
 void Kindle::SaveUsersandBooks() {
@@ -224,6 +206,9 @@ bool Kindle::Login(const char* name, const char* password) {
 }
 
 void Kindle::ViewContent() {
+	if (b == 0) {
+		cout << "No books\n";
+	}
 	for (int i = 0; i < b; i++)
 	{
 		cout << books[i].getHeadline() << " by " << books[i].getAuthor() << endl;

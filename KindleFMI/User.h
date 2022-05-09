@@ -21,12 +21,12 @@ public:
 	~User();
 	void free();
 	void copyFrom(const User& other);
-	void WriteBook(Book book);
+	void WriteBook(const char* author, const char* title, const char* content);
 	void Save(ofstream& myfile);
 	void Read(ifstream& myfile);
 	bool hasRead(const char* title);
 	void ReadComments(Book book);
-	void ReadBook(Book book);
+	void ReadBook(const char* author, const char* headline);
 	void WriteComment(Book book, const char* comment);
 	void ReadPage(Book book, int number);
 	void ChangeBook(Book book, char* page);

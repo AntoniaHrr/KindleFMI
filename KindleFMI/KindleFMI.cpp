@@ -49,6 +49,52 @@ int main()
             kindleFMI.WriteBook(author, title, content);
 
         }
+        if (strcmp(input, "list") == 0) {
+            kindleFMI.ViewContent();
+        }
+        /*if (strcmp(input, "view grade of book") == 0) {
+            char title[100];
+            cout << "enter title: ";
+            cin.getline(title, 100);
+            kindleFMI;
+        }*/
+        if (strcmp(input, "grade book") == 0) {
+            char title[100];
+            cout << "enter title: ";
+            cin.getline(title, 100);
+            int grade = 0;
+            cout << "Rate the book:";
+            cin >> grade;
+            kindleFMI.AddRate(title, grade);
+        }
+        if (strcmp(input, "view comments") == 0) {
+            char title[100];
+            cout << "enter title: ";
+            cin.getline(title, 100);
+            kindleFMI.ViewComments(title);
+        }
+        if (strcmp(input, "leave comment") == 0) {
+            char title[100];
+            cout << "enter title: ";
+            cin.getline(title, 100);
+            char comment[4069];
+            cout << "enter comment: ";
+            cin.getline(comment, 4069);
+            
+            kindleFMI.AddComment(title, comment);
+        }
+        if (strcmp(input, "update") == 0) {
+            char title[100];
+            cout << "enter title: ";
+            cin.getline(title, 100);
+            char content[4069];
+            cout << "enter content: ";
+            cin.getline(content, 4069);
+            char author[100];
+            cout << "enter author: ";
+            cin.getline(author, 100);
+            kindleFMI.UpdateBook(title, author, content);
+        }
         if (strcmp(input, "read") == 0) {
             char title[100];
             cout << "enter title:";

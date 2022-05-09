@@ -91,6 +91,8 @@ void Book::setRating(double rating) {
 }
 
 void Book::setPages(const Page* pages) {
+	delete[] this->pages;
+	this->pages = new Page[pages_count];
 	for (int i = 0; i < pages_count; i++)
 	{
 		this->pages[i] = pages[i];
@@ -216,6 +218,9 @@ void Book::AddRate(int rate, const char* username) {
 }
 
 void Book::addPage(const char* page) {
+	Page NewPage;
+	NewPage.setNumber(pages_count);
+	NewPage.setContent(page);
 	pages_count++;
 	Page* place_holder = new Page[pages_count];
 	for (int i = 0; i < pages_count - 1; i++)
@@ -224,8 +229,7 @@ void Book::addPage(const char* page) {
 	}
 	delete[] pages;
 
-	place_holder[pages_count - 1].setNumber(pages_count);
-	place_holder[pages_count - 1].setContent(page);
+	place_holder[pages_count - 1] = NewPage;
 	this->pages = place_holder;
 }
 
@@ -249,7 +253,6 @@ void Book::addComment(const char* comment, const char* author) {
 		place_holder[comments_count - 1][i] = comment[i];
 	}
 	this->comments = place_holder;
-	delete[] place_holder;
 
 }
 

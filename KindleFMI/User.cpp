@@ -56,30 +56,7 @@ void User::copyFrom(const User& other) {
 }
 
 
-void User::WriteBook(Book book) {
-	w++;
-	Book* place_holder = new Book[w];
-	for (int i = 0; i < w - 1; i++)
-	{
-		place_holder[i] = written[i];
-	}
-	delete[] written;
-	place_holder[w - 1].setAuthor(book.getAuthor());
-	place_holder[w - 1].setHeadline(book.getHeadline());
-	place_holder[w - 1].setComments(book.getComments());
-	place_holder[w - 1].setPagesCount(book.getPagesCount());
-	place_holder[w - 1].setCommentsCount(book.getCommentsCount());
-	place_holder[w - 1].setRating(book.getRating());
 
-	Page* place_holderPages = new Page[book.getPagesCount()];
-	for (int i = 0; i < book.getPagesCount(); i++)
-	{
-		place_holderPages[i] = book.getPage(i);
-	}
-	place_holder[w - 1].setPages(place_holderPages);
-
-	this->written = place_holder;
-}
 void User::Save(ofstream& myfile) {
 	int x = strlen(username);
 	int y = strlen(password);
@@ -140,13 +117,25 @@ void User::ReadComments(Book book) {
 		cout << endl;
 	}
 }
-void User::ReadBook(Book book) {
-	//check if already is read before adding to read*
-	for (int i = 0; i < book.getPagesCount(); i++)
+void User::WriteBook(const char* author, const char* title, const char* content) {
+	Book book;
+	book.setAuthor(author);
+	book.setHeadline(title);
+	book.addPage(content);
+	w++;
+	Book* place_holder = new Book[w];
+	for (int i = 0; i < w - 1; i++)
 	{
-		cout << book.getPage(i);
-		cout << endl;
+		place_holder[i] = written[i];
 	}
+	delete[] written;
+	place_holder[w - 1] = book;
+	this->written = place_holder;
+}
+void User::ReadBook(const char* author, const char* headline) {
+	Book Newbook;
+	Newbook.setAuthor(author);
+	Newbook.setHeadline(headline);
 	r++;
 	Book* place_holder = new Book[r];
 	for (int i = 0; i < r - 1; i++)
@@ -154,20 +143,7 @@ void User::ReadBook(Book book) {
 		place_holder[i] = read[i];
 	}
 	delete[] read;
-	place_holder[r - 1].setAuthor(book.getAuthor());
-	place_holder[r - 1].setHeadline(book.getHeadline());
-	place_holder[r - 1].setComments(book.getComments());
-	place_holder[r - 1].setPagesCount(book.getPagesCount());
-	place_holder[r - 1].setCommentsCount(book.getCommentsCount());
-	place_holder[r - 1].setRating(book.getRating());
-
-	Page* place_holderPages = new Page[book.getPagesCount()];
-	for (int i = 0; i < book.getPagesCount(); i++)
-	{
-		place_holderPages[i] = book.getPage(i);
-	}
-	place_holder[r - 1].setPages(place_holderPages);
-
+	place_holder[r - 1] = Newbook;
 	this->read = place_holder;
 }
 void User::WriteComment(Book book, const char* comment) {
