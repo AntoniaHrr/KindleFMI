@@ -138,13 +138,13 @@ void Kindle::WriteBook(const char* author, const char* title, const char* conten
 	place_holder[b - 1].setPagesCount(book.getPagesCount());
 
 
-	/*Page* place_holderPages = new Page[book.getPagesCount()];
+	Page* place_holderPages = new Page[book.getPagesCount()];
 	for (int i = 0; i < book.getPagesCount(); i++)
 	{
 		place_holderPages[i] = book.getPage(i);
 	}
 	
-	place_holder[b - 1].setPages(place_holderPages);*/
+	place_holder[b - 1].setPages(place_holderPages);
 
 
 	this->books = place_holder;
